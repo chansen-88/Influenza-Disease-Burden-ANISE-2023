@@ -6,13 +6,11 @@ library(tidyverse)
 library(zoo)
 
 #set working directory - this is where we will save everything 
-setwd("C:/Users/hansencl/Desktop/ANISE 2023 activity") 
+#setwd("C:/Users/hansencl/Desktop/ANISE 2023 activity") 
 
 
 #read in the dataset we will use 
-dat = read.csv("respiratory_mortality_SouthAfrica_2009to2018.csv") %>%
-  mutate(resp_rate = rollmean(resp_uc/population*100000,k=5,align="center",fill="extend"))#convert to a mortality rate and smooth
-
+dat = read.csv("respiratory_mortality_SouthAfrica_2009_2018.csv") 
 
 ## check the dates variable to make sure R understand it as a date
 class(dat$date) #reads as a character 
@@ -27,12 +25,16 @@ head(dat)
 tail(dat)
 View(dat)
 
+dat = dat %>% 
+  arrange(date) %>% 
+  mutate(resp_rate = rollmean(resp_uc/population*100000,k=5,align="center",fill="extend"))#convert to a mortality rate and smooth
+
 
 
 #make a figure to show respiratory mortality and influenza circulation - plot from slides 
 plot1 = ggplot(data=dat)+
   theme_bw()+
-  geom_line(aes(x=date, y=resp_rate,color="Underlying respiratory mortality rate"),size=2)+
+  geom_line(aes(x=date, y=resp_rate,color="Underlying respiratory mortality rate"),linewidth=2)+
   geom_line(aes(x=date, y=perc_pos_flu*100, color="Percent or samples positive for influenza"))+
   labs(x=NULL, y="Mortality Rate and Viral Circulation")+
   scale_color_manual(name=NULL, values=c("aquamarine3","black"))+
@@ -47,6 +49,7 @@ ggsave(plot=plot1, "mortality and viral time series.png",height=5,width=13, unit
 
 #Make a separate variable for flu and RSV for each season 
 dat = dat %>% 
+  arrange(date) %>% 
   mutate(season = year(date),
          flu = perc_pos_flu,
          rsv = perc_pos_rsv) %>% 

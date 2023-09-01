@@ -1,4 +1,4 @@
-#rm(list=ls()) #run this to clear your environment 
+rm(list=ls()) #run this to clear your environment 
 
 #upload packages 
 library(splines)

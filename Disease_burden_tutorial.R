@@ -138,7 +138,7 @@ out = as.data.frame(cbind(pop,
                           predicted))
 out$season = rownames(out)
 View(out)
-
+write.csv(out, "excess flu estimates - south africa.csv")
 #why do you think RSV is negative? 
 #Can you make the figure in plot 1 but with RSV instead of flu? 
 #what do you notice about the RSV peaks and the mortality peaks? 
@@ -149,7 +149,7 @@ data1$flu.ex = data1$baseline_withrsv + data1$flu
 plot2 <- ggplot(data=data1)+
   geom_area(aes(x=date, y=flu.ex, fill="Excess attributed to flu"))+
   geom_area(aes(x=date, y=baseline_withrsv, fill="Seasonal baseline"))+
-  geom_line(aes(x=date, y=observed, color="Observed" ),linetype="dashed",size=1.5)+
+  geom_line(aes(x=date, y=observed, color="Observed" ),linetype="dashed",linewidth=1.5)+
   geom_line(aes(x=date, y=predicted, color="Modeled"))+
   geom_line(aes(x=date, y=baseline_withrsv),color="black")+
   scale_color_manual(name=NULL, values=c("hotpink","navy"))+
